@@ -67,18 +67,6 @@ function lockdown {
 	echo "root locked"
 	echo "Lock any unauthorized accounts NOW! Remove admin rights from non-admins"
 	read -n1 -r -p "Press space to continue..." key
-	echo "allow-guest=false" >> /etc/lightdm/lightdm.conf.d/50-ubuntu.conf
-	echo "allow-guest=false" >> /etc/lightdm/lightdm.conf
-	echo "please delete the auto login setting..."
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		vim /etc/lightdm/lightdm.conf
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
-	echo 'Guest Disabled'
-	echo 'System accounts should be locked'
 }
 function nopass {
 	echo ''
