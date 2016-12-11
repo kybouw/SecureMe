@@ -15,6 +15,9 @@ function main {
 	sshfix #sshconfig
 ##	scruboff #get rid of software
 #	end of scripts
+	updatedb
+	hahahome='HOME'
+	chmod 0750 ${!hahahome}
 	echo 'Script is complete...'
 	echo "Begin fishing for points...\n"
 	read -n1 -r -p "Press space to continue..." key
@@ -37,7 +40,7 @@ function udpf {
 function toolbelt {
 	echo ""
 	echo 'installing utilities...'
-	apt-get -y install vim ufw gufw firefox clamav netstat nmap libpam-cracklib lsof
+	apt-get -y install vim ufw gufw firefox clamav netstat nmap libpam-cracklib lsof chkrootkit
 	echo 'Finished installs'
 }
 function ugpf {
@@ -58,6 +61,9 @@ function noport {
 		echo 'Exiting script...'
 		exit 1
 	fi
+	echo "Verify rules..."
+	ufw status
+	read -n1 -r -p "Press space to continue..." key
 	echo "Finished managing rules"
 }
 function lockdown {
@@ -115,6 +121,9 @@ function scruboff {
 	echo 'Getting rid of software you dont need'
 	apt-get remove vsftp nc ncat
 	echo 'check for unwanted apps manually'
+	chkrootkit
+	freshclam
+	clamscan -i -r --remove=yes /
 	service --status-all | less
 	sudo dpkg --get --selections | less
 	netstat -tulpn | grep -i LISTEN | less
