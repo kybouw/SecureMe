@@ -7,7 +7,7 @@ function main {
 	echo 'main function running...'
 #	begin scripts
 	udpf #apt-get update
-##	toolbelt #install tools
+	toolbelt #install tools
 	ugpf #apt-get upgrade
 	noport #enables ufw
 	lockdown #locks accounts
@@ -40,7 +40,17 @@ function udpf {
 function toolbelt {
 	echo ""
 	echo 'installing utilities...'
-	apt-get -y install vim ufw gufw firefox clamav netstat nmap libpam-cracklib lsof chkrootkit
+	apt-get -y install \
+vim \
+ufw \
+gufw \
+firefox \
+clamav \
+netstat \
+nmap \
+libpam-cracklib \
+lsof \
+chkrootkit
 	echo 'Finished installs'
 }
 function ugpf {
@@ -75,7 +85,7 @@ function lockdown {
 	read -n1 -r -p "Press space to continue..." key
 }
 function nopass {
-	echo ''
+	echo ""
 	echo "Changing password policies requires manual interaction\n"
 	echo "Please open Mr. Silva's checklist for instructions\n"
 	echo 'First we will edit login.defs'
