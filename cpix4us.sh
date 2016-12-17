@@ -128,8 +128,6 @@ function sshfix {
 }
 function scruboff {
 	echo ''
-	echo 'Getting rid of software you dont need'
-	apt-get remove vsftp nc ncat
 	echo 'check for unwanted apps manually'
 	chkrootkit
 	freshclam
