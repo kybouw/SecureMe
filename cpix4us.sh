@@ -7,15 +7,13 @@ function main {
 	echo 'main function running...'
 
 #	begin scripts
-<<<<<<< HEAD
+	
 	udpf #apt-get update
 	toolbelt #install tools
 	ugpf #apt-get upgrade
-=======
 
 	aptf #apt-get update #
 	toolbelt #install tools #
->>>>>>> 5492321287d2c316abbbaa9c812a868ceafed003
 	noport #enables ufw
 	lockdown #locks accounts #
 	nopass #sets password policies
@@ -58,7 +56,6 @@ function aptf {
 #install tools to use for misc purposes
 function toolbelt {
 	echo ""
-<<<<<<< HEAD
 	echo 'installing utilities...'
 	apt-get -y install \
 vim \
@@ -71,7 +68,6 @@ nmap \
 libpam-cracklib \
 lsof \
 chkrootkit
-=======
 	echo "installing utilities..."
 	apt-get -y install \
 	vim \
@@ -85,7 +81,6 @@ chkrootkit
 	lsof \
 	locate \
 	chkrootkit
->>>>>>> 5492321287d2c316abbbaa9c812a868ceafed003
 	echo 'Finished installs'
 	updatedb
 	echo "Updated database"
@@ -128,15 +123,12 @@ function lockdown {
 #this should be its own script
 function nopass {
 	echo ""
-<<<<<<< HEAD
 	echo "Changing password policies requires manual interaction\n"
 	echo "Please open Mr. Silva's checklist for instructions\n"
-=======
 	echo "Changing password policies requires manual interaction"
 	echo "Please open Mr. Silva's checklist for instructions"
 
 	#login.defs
->>>>>>> 5492321287d2c316abbbaa9c812a868ceafed003
 	echo 'First we will edit login.defs'
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
