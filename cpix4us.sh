@@ -5,79 +5,112 @@ echo 'The script is now running...'
 
 function main {
 	echo 'main function running...'
+
 #	begin scripts
-	udpf #apt-get update
-##	toolbelt #install tools
-	ugpf #apt-get upgrade
+
+	aptf #apt-get update #
+	toolbelt #install tools #
 	noport #enables ufw
-	lockdown #locks accounts
+	lockdown #locks accounts #
 	nopass #sets password policies
-	sshfix #sshconfig
-##	scruboff #get rid of software
+	sshfix #sshconfig #
+	nomedia #gets rid of media files #
+	scruboff #get rid of software
+
 #	end of scripts
-	updatedb
-	hahahome='HOME'
-	chmod 0750 ${!hahahome}
+
+
 	echo 'Script is complete...'
 	echo "Begin fishing for points...\n"
-	read -n1 -r -p "Press space to continue..." key
-	exit 0
-	
+	cont
 }
-function udpf {
-	echo ""
-	echo "Check your sources! Software & Updates\n"
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		echo "Updating sources..."
-		apt-get update
+
+
+#function that pauses between steps
+function cont {
+	read -n1 -p "Press space to continue, q to quit" key
+	if [ "$key" = "" ]; then
+		echo "Continuing..."
 	else
-		echo "Exiting script..."
+		echo "Quitting script..."
 		exit 1
 	fi
+}
+
+#apt update
+function aptf {
+	echo ""
+	echo "Check your sources! Software & Updates\n"
+	gnome-terminal -e "sudo nano /etc/apt/sources.list"
+	cont
+	apt-get -y update
+	apt-get -y upgrade
+	apt-get -y install --reinstall coreutils
 	echo "Finished updating"
 }
+
+#install tools to use for misc purposes
 function toolbelt {
 	echo ""
-	echo 'installing utilities...'
-	apt-get -y install vim ufw gufw firefox clamav netstat nmap libpam-cracklib lsof chkrootkit
+	echo "installing utilities..."
+	apt-get -y install \
+	vim \
+	ufw \
+	gufw \
+	firefox \
+	clamav \
+	netstat \
+	nmap \
+	libpam-cracklib \
+	lsof \
+	locate \
+	chkrootkit
 	echo 'Finished installs'
+	updatedb
+	echo "Updated database"
 }
-function ugpf {
-	echo ""
-	echo 'Upgrading packages...'
-	apt-get upgrade
-	echo 'Finished upgrading'
-}
+
+
+
+#blocks ports and traffic
 function noport {
 	echo ""
 	echo "Enabling Uncomplicated Firewall..."
 	ufw enable
-	echo "change net.ipv4.tcp_syncookies entry from 0 to 1\n"
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		vim /etc/sysctl.conf
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
+	cont
+
+	echo "preventing ddos attacks"
+	sysctl -w net.ipv4.tcp_syncookies=1
+	cont
+
 	echo "Verify rules..."
 	ufw status
-	read -n1 -r -p "Press space to continue..." key
+	cont
 	echo "Finished managing rules"
 }
+
+
+#locks root and home
 function lockdown {
 	echo ""
 	echo "Locking root user"
 	passwd -l root
 	echo "root locked"
-	echo "Lock any unauthorized accounts NOW! Remove admin rights from non-admins"
-	read -n1 -r -p "Press space to continue..." key
+	hahahome='HOME'
+	chmod 0750 ${!hahahome}
+	echo "home directory locked"
+	cont
 }
+
+
+#manages password policies
+#this should be its own script
 function nopass {
-	echo ''
-	echo "Changing password policies requires manual interaction\n"
-	echo "Please open Mr. Silva's checklist for instructions\n"
+	echo ""
+	echo "Changing password policies requires manual interaction"
+	echo "Please open Mr. Silva's checklist for instructions"
+
+	#login.defs
 	echo 'First we will edit login.defs'
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -86,6 +119,8 @@ function nopass {
 		echo 'Exiting script...'
 		exit 1
 	fi
+
+	#common-password
 	echo "Now we will edit common-password\n"
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -94,28 +129,64 @@ function nopass {
 		echo 'Exiting script...'
 		exit 1
 	fi
+
+
 	echo 'Password policies configured'
+	cont
 }
+
+
+
+
+#easy point here
 function sshfix {
 	echo ''
 	echo 'Turn off root login settings for ssh'
 	echo 'This must be performed manually'
+
+	#permitrootlogin
 	echo 'Change the line PermitRootLogin to no'
 	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		vim /etc/ssh/sshd_config
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
+	gnome-terminal -e "sudo vim /etc/ssh/sshd_config"
+	cont
+
+	#enables/disables ssh
 	read -n1 -r -p "Press 1 to turn on ssh, space to turn off..." key
 	if [ "$key" = '1' ]; then
 		service ssh restart
 	else
 		service ssh stop
 	fi
+
+
 	echo 'Finished ssh config editing'
+	cont
 }
+
+
+#finds and deletes media files
+function nomedia {
+	echo "Deleting media..."
+	find / -name '*.mp3' -type f -delete
+	find / -name '*.mov' -type f -delete
+	find / -name '*.mp4' -type f -delete
+	find / -name '*.avi' -type f -delete
+	find / -name '*.mpg' -type f -delete
+	find / -name '*.mpeg' -type f -delete
+	find / -name '*.flac' -type f -delete
+	find / -name '*.m4a' -type f -delete
+	find / -name '*.flv' -type f -delete
+	find / -name '*.ogg' -type f -delete
+	find /home -name '*.gif' -type f -delete
+	find /home -name '*.png' -type f -delete
+	find /home -name '*.jpg' -type f -delete
+	find /home -name '*.jpeg' -type f -delete
+	echo "Media deleted"
+	cont
+}
+
+
+
 function scruboff {
 	echo ''
 	echo 'Getting rid of software you dont need'
@@ -139,6 +210,11 @@ function scruboff {
 	fi
 	echo 'Finished uninstalling'
 }
+
+#actually running the script
+unalias -a #Get rid of aliases
+echo "unalias -a" >> ~/.bashrc
+echo "unalias -a" >> /root/.bashrc
 if [ "$(id -u)" != "0" ]; then
 	echo 'Please run as root'
 	exit
