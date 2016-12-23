@@ -16,7 +16,7 @@ function main {
 	toolbelt #install tools #
 	noport #enables ufw
 	lockdown #locks accounts #
-	nopass #sets password policies
+#	nopass #sets password policies
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
 	scruboff #get rid of software
@@ -68,19 +68,6 @@ nmap \
 libpam-cracklib \
 lsof \
 chkrootkit
-	echo "installing utilities..."
-	apt-get -y install \
-	vim \
-	ufw \
-	gufw \
-	firefox \
-	clamav \
-	netstat \
-	nmap \
-	libpam-cracklib \
-	lsof \
-	locate \
-	chkrootkit
 	echo 'Finished installs'
 	updatedb
 	echo "Updated database"
