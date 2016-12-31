@@ -26,11 +26,11 @@ function main {
 }
 
 
-#function that pauses between steps
+# function that pauses between steps
 function cont {
-	read -n1 -p "Press space to continue, q to quit" key
+	read -n1 -p "Press space to continue, AOK to quit" key
 	if [ "$key" = "" ]; then
-		echo "Continuing..."
+		echo "Moving forward..."
 	else
 		echo "Quitting script..."
 		exit 1
@@ -41,11 +41,18 @@ function cont {
 function aptf {
 	echo ""
 	echo "Check your sources! Software & Updates\n"
+
+	#offline solution
+	cat ./mysources.list | sudo tee /etc/apt/sources.list
+
+	#online solution
+#	curl https://repogen.simplylinux.ch/txt/trusty/sources_61c3eb1fcff54480d3fafbec45abfe85c2a4b1a8.txt | tee /etc/apt/sources.list
+
 	gnome-terminal -e "sudo nano /etc/apt/sources.list"
 	cont
 	apt-get -y update
 	apt-get -y upgrade
-	apt-get -y install --reinstall coreutils
+#	apt-get -y install --reinstall coreutils
 	echo "Finished updating"
 }
 
@@ -68,6 +75,7 @@ function toolbelt {
 	echo 'Finished installs'
 	updatedb
 	echo "Updated database"
+	cont
 }
 
 
@@ -110,7 +118,16 @@ function nopass {
 	echo "Changing password policies requires manual interaction"
 	echo "Please open Mr. Silva's checklist for instructions"
 
+	#run cracklib
+	libpam-cracklib
+
 	#login.defs
+	echo "Making a backup login.defs file..."
+	cp /etc/login.defs /etc/login.defs.backup
+	chmod a-w /etc/login.defs.backup
+	cont
+
+#TODO get a modified login.defs file to swap
 	echo 'First we will edit login.defs'
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -121,6 +138,12 @@ function nopass {
 	fi
 
 	#common-password
+	echo "Making a backup config file..."
+	cp /etc/pam.d/common-password /etc/pam.d/common-password.backup
+	chmod a-w /etc/pam.d/common-password.backup
+	cont
+
+#TODO get a modified common-password file to swap
 	echo "Now we will edit common-password\n"
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -143,6 +166,13 @@ function sshfix {
 	echo ''
 	echo 'Turn off root login settings for ssh'
 	echo 'This must be performed manually'
+	echo "Making a backup config file..."
+	cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+	chmod a-w /etc/ssh/sshd_config.backup
+	cont
+
+#TODO get a modified sshd_config to swap.
+## Edit PermitRootLogin(no) and net.ipv4.tcp_syncookies(1)
 
 	#permitrootlogin
 	echo 'Change the line PermitRootLogin to no'
@@ -151,19 +181,17 @@ function sshfix {
 	cont
 
 	#enables/disables ssh
-	read -n1 -r -p "Press 1 to turn on ssh, space to turn off..." key
+	service ssh restart
+	read -n1 -r -p "Press 1 to turn off ssh, space to continue..." key
 	if [ "$key" = '1' ]; then
-		service ssh restart
-	else
 		service ssh stop
 	fi
-
 
 	echo 'Finished ssh config editing'
 	cont
 }
 
-
+#TODO
 #finds and deletes media files
 function nomedia {
 	echo "Deleting media..."
@@ -186,11 +214,9 @@ function nomedia {
 }
 
 
-
+#TODO
 function scruboff {
 	echo ''
-	echo 'Getting rid of software you dont need'
-	apt-get remove vsftp nc ncat
 	echo 'check for unwanted apps manually'
 	chkrootkit
 	freshclam
@@ -216,7 +242,7 @@ unalias -a #Get rid of aliases
 echo "unalias -a" >> ~/.bashrc
 echo "unalias -a" >> /root/.bashrc
 if [ "$(id -u)" != "0" ]; then
-	echo 'Please run as root'
+	echo "Please run as root"
 	exit
 else
 	main
