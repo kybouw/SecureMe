@@ -7,19 +7,12 @@ function main {
 	echo "main function running..."
 
 #	begin scripts
-	
-<<<<<<< HEAD
-	udpf #apt-get update
-	toolbelt #install tools
-	ugpf #apt-get upgrade
 
-=======
->>>>>>> Round2
 	aptf #apt-get update #
 	toolbelt #install tools #
 	noport #enables ufw
 	lockdown #locks accounts #
-#	nopass #sets password policies
+	nopass #sets password policies
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
 	scruboff #get rid of software
@@ -68,19 +61,6 @@ function toolbelt {
 	echo ""
 	echo 'installing utilities...'
 	apt-get -y install \
-<<<<<<< HEAD
-vim \
-ufw \
-gufw \
-firefox \
-clamav \
-netstat \
-nmap \
-libpam-cracklib \
-lsof \
-chkrootkit
-	echo 'Finished installs'
-=======
 	vim \
 	ufw \
 	gufw \
@@ -93,7 +73,6 @@ chkrootkit
 	locate \
 	chkrootkit
 	echo "Finished installs"
->>>>>>> Round2
 	updatedb
 	echo "Updated database"
 	cont
