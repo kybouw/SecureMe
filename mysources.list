@@ -1,0 +1,23 @@
+##############################################
+# This is a sources.list file that should include all repos needed for the competition
+#
+# This file should overwrite /etc/apt/sources.list
+# simply use the command "cat mysources.list | tee /etc/apt/sources.list"
+#
+# This should take care of it.
+# -Kyle
+##############################################
+
+##### Ubuntu Main repos
+deb http://us.archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+
+##### Ubuntu Update Repos
+deb http://us.archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+##### Ubuntu Partner Repo
+deb http://archive.canonical.com/ubuntu trusty partner
+
+##### Ubuntu Extras Repo
+deb http://extras.ubuntu.com/ubuntu trusty main

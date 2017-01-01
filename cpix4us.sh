@@ -4,14 +4,17 @@ echo 'Hello, daemons! Welcome to the cpix script!'
 echo 'The script is now running...'
 
 function main {
-	echo 'main function running...'
+	echo "main function running..."
 
 #	begin scripts
 	
+<<<<<<< HEAD
 	udpf #apt-get update
 	toolbelt #install tools
 	ugpf #apt-get upgrade
 
+=======
+>>>>>>> Round2
 	aptf #apt-get update #
 	toolbelt #install tools #
 	noport #enables ufw
@@ -24,17 +27,17 @@ function main {
 #	end of scripts
 
 
-	echo 'Script is complete...'
+	echo "Script is complete..."
 	echo "Begin fishing for points...\n"
 	cont
 }
 
 
-#function that pauses between steps
+# function that pauses between steps
 function cont {
-	read -n1 -p "Press space to continue, q to quit" key
+	read -n1 -p "Press space to continue, AOK to quit" key
 	if [ "$key" = "" ]; then
-		echo "Continuing..."
+		echo "Moving forward..."
 	else
 		echo "Quitting script..."
 		exit 1
@@ -45,11 +48,18 @@ function cont {
 function aptf {
 	echo ""
 	echo "Check your sources! Software & Updates\n"
+
+	#offline solution
+	cat ./mysources.list | sudo tee /etc/apt/sources.list
+
+	#online solution
+#	curl https://repogen.simplylinux.ch/txt/trusty/sources_61c3eb1fcff54480d3fafbec45abfe85c2a4b1a8.txt | tee /etc/apt/sources.list
+
 	gnome-terminal -e "sudo nano /etc/apt/sources.list"
 	cont
 	apt-get -y update
 	apt-get -y upgrade
-	apt-get -y install --reinstall coreutils
+#	apt-get -y install --reinstall coreutils
 	echo "Finished updating"
 }
 
@@ -58,6 +68,7 @@ function toolbelt {
 	echo ""
 	echo 'installing utilities...'
 	apt-get -y install \
+<<<<<<< HEAD
 vim \
 ufw \
 gufw \
@@ -69,8 +80,23 @@ libpam-cracklib \
 lsof \
 chkrootkit
 	echo 'Finished installs'
+=======
+	vim \
+	ufw \
+	gufw \
+	firefox \
+	clamav \
+	netstat \
+	nmap \
+	libpam-cracklib \
+	lsof \
+	locate \
+	chkrootkit
+	echo "Finished installs"
+>>>>>>> Round2
 	updatedb
 	echo "Updated database"
+	cont
 }
 
 
@@ -115,7 +141,16 @@ function nopass {
 	echo "Changing password policies requires manual interaction"
 	echo "Please open Mr. Silva's checklist for instructions"
 
+	#run cracklib
+	libpam-cracklib
+
 	#login.defs
+	echo "Making a backup login.defs file..."
+	cp /etc/login.defs /etc/login.defs.backup
+	chmod a-w /etc/login.defs.backup
+	cont
+
+#TODO get a modified login.defs file to swap
 	echo 'First we will edit login.defs'
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -125,7 +160,24 @@ function nopass {
 		exit 1
 	fi
 
+	# will change pass age for users aready created
+	for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
+
+	# This is expiremental, I do not trust this feature yet.
+	#XXX
+	sed -i 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS 3/g' /etc/login.defs
+	sed -i 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS 60/g' /etc/login.defs
+	sed -i 's/PASS_WARN_AGE.*/PASS_WARN_AGE 7/g' /etc/login.defs
+
+
+
 	#common-password
+	echo "Making a backup config file..."
+	cp /etc/pam.d/common-password /etc/pam.d/common-password.backup
+	chmod a-w /etc/pam.d/common-password.backup
+	cont
+
+#TODO get a modified common-password file to swap
 	echo "Now we will edit common-password\n"
 	read -n1 -r -p "Press space to continue..." key
 	if [ "$key" = '' ]; then
@@ -148,27 +200,27 @@ function sshfix {
 	echo ''
 	echo 'Turn off root login settings for ssh'
 	echo 'This must be performed manually'
+	echo "Making a backup config file..."
+	cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+	chmod a-w /etc/ssh/sshd_config.backup
+	cont
 
 	#permitrootlogin
-	echo 'Change the line PermitRootLogin to no'
-	read -n1 -r -p "Press space to continue..." key
-	gnome-terminal -e "sudo vim /etc/ssh/sshd_config"
+	cat ./sshdconfig | tee /etc/ssh/sshd_config
 	cont
 
 	#enables/disables ssh
-	read -n1 -r -p "Press 1 to turn on ssh, space to turn off..." key
+	service ssh restart
+	read -n1 -r -p "Press 1 to turn off ssh, space to continue..." key
 	if [ "$key" = '1' ]; then
-		service ssh restart
-	else
 		service ssh stop
 	fi
-
 
 	echo 'Finished ssh config editing'
 	cont
 }
 
-
+#TODO
 #finds and deletes media files
 function nomedia {
 	echo "Deleting media..."
@@ -191,7 +243,7 @@ function nomedia {
 }
 
 
-
+#TODO
 function scruboff {
 	echo ''
 	echo 'check for unwanted apps manually'
@@ -219,7 +271,7 @@ unalias -a #Get rid of aliases
 echo "unalias -a" >> ~/.bashrc
 echo "unalias -a" >> /root/.bashrc
 if [ "$(id -u)" != "0" ]; then
-	echo 'Please run as root'
+	echo "Please run as root"
 	exit
 else
 	main
