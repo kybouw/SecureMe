@@ -7,7 +7,7 @@ function main {
 	echo "main function running..."
 
 #	begin scripts
-
+	
 	aptf #apt-get update #
 	toolbelt #install tools #
 	noport #enables ufw
@@ -59,7 +59,7 @@ function aptf {
 #install tools to use for misc purposes
 function toolbelt {
 	echo ""
-	echo "installing utilities..."
+	echo 'installing utilities...'
 	apt-get -y install \
 	vim \
 	ufw \
@@ -115,6 +115,8 @@ function lockdown {
 #this should be its own script
 function nopass {
 	echo ""
+	echo "Changing password policies requires manual interaction\n"
+	echo "Please open Mr. Silva's checklist for instructions\n"
 	echo "Changing password policies requires manual interaction"
 	echo "Please open Mr. Silva's checklist for instructions"
 
