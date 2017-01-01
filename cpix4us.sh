@@ -137,6 +137,17 @@ function nopass {
 		exit 1
 	fi
 
+	# will change pass age for users aready created
+	for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
+
+	# This is expiremental, I do not trust this feature yet.
+	#XXX
+	sed -i 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS 3/g' /etc/login.defs
+	sed -i 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS 60/g' /etc/login.defs
+	sed -i 's/PASS_WARN_AGE.*/PASS_WARN_AGE 7/g' /etc/login.defs
+
+
+
 	#common-password
 	echo "Making a backup config file..."
 	cp /etc/pam.d/common-password /etc/pam.d/common-password.backup
@@ -171,13 +182,8 @@ function sshfix {
 	chmod a-w /etc/ssh/sshd_config.backup
 	cont
 
-#TODO get a modified sshd_config to swap.
-## Edit PermitRootLogin(no) and net.ipv4.tcp_syncookies(1)
-
 	#permitrootlogin
-	echo 'Change the line PermitRootLogin to no'
-	read -n1 -r -p "Press space to continue..." key
-	gnome-terminal -e "sudo vim /etc/ssh/sshd_config"
+	cat ./sshdconfig | tee /etc/ssh/sshd_config
 	cont
 
 	#enables/disables ssh
