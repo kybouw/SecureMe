@@ -4,7 +4,7 @@ echo 'Hello, daemons! Welcome to the cpix script!'
 echo 'The script is now running...'
 
 function main {
-	echo 'main function running...'
+	echo "main function running..."
 
 #	begin scripts
 
@@ -20,7 +20,7 @@ function main {
 #	end of scripts
 
 
-	echo 'Script is complete...'
+	echo "Script is complete..."
 	echo "Begin fishing for points...\n"
 	cont
 }
@@ -72,7 +72,7 @@ function toolbelt {
 	lsof \
 	locate \
 	chkrootkit
-	echo 'Finished installs'
+	echo "Finished installs"
 	updatedb
 	echo "Updated database"
 	cont
