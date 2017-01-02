@@ -15,10 +15,9 @@ function main {
 	nopass #sets password policies
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
-	scruboff #get rid of software
+#	scruboff #get rid of software
 
 #	end of scripts
-
 
 	echo "Script is complete..."
 	echo "Begin fishing for points...\n"
@@ -129,26 +128,14 @@ function nopass {
 	chmod a-w /etc/login.defs.backup
 	cont
 
-#TODO get a modified login.defs file to swap
-	echo 'First we will edit login.defs'
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		vim /etc/login.defs
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
-
-	# will change pass age for users aready created
-	for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
+	echo "Copying local login.defs file..."
+	cat ./my_login.defs | tee /etc/login.defs
 
 	# This is expiremental, I do not trust this feature yet.
-	#XXX
-	sed -i 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS 3/g' /etc/login.defs
-	sed -i 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS 60/g' /etc/login.defs
-	sed -i 's/PASS_WARN_AGE.*/PASS_WARN_AGE 7/g' /etc/login.defs
-
-
+	#XXX This will probably screw up comments
+#	sed -i 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS 2/g' /etc/login.defs
+#	sed -i 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS 60/g' /etc/login.defs
+#	sed -i 's/LOGIN_RETRIES.*/LOGIN_RETRIES 3/g' /etc/login.defs
 
 	#common-password
 	echo "Making a backup config file..."
@@ -156,22 +143,18 @@ function nopass {
 	chmod a-w /etc/pam.d/common-password.backup
 	cont
 
-#TODO get a modified common-password file to swap
-	echo "Now we will edit common-password\n"
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		vim /etc/pam.d/common-password
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
-
+	echo "Copying local common-password file..."
+	cat ./my_common-password | tee /etc/pam.d/common-password
 
 	echo 'Password policies configured'
+	# done configuring
+
+	# will change pass age for users aready created
+	echo "Applying to all users..."
+	for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
+	echo "Password Policies finished."
 	cont
 }
-
-
 
 
 #easy point here
