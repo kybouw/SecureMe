@@ -1,9 +1,0 @@
-Kyle, use this if you forget stuff
-
-edit your file
-use 'git add .' to add all files in the folder, or just 'git add filename' for one
-Commit your changes 'git commit -m "message"'
-push your commits to your pi 'git push cpix master'
-
-The name of your remote is cpix
-master is a branch, you can make other branches if you need.
