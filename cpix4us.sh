@@ -42,12 +42,11 @@ function aptf {
 	echo "Check your sources! Software & Updates\n"
 
 	#offline solution
-	cat ./mysources.list | sudo tee /etc/apt/sources.list
+	cp ./mysources.list /etc/apt/sources.list
 
 	#online solution
 #	curl https://repogen.simplylinux.ch/txt/trusty/sources_61c3eb1fcff54480d3fafbec45abfe85c2a4b1a8.txt | tee /etc/apt/sources.list
 
-	gnome-terminal -e "sudo nano /etc/apt/sources.list"
 	cont
 	apt-get -y update
 	apt-get -y upgrade
@@ -70,7 +69,8 @@ function toolbelt {
 	libpam-cracklib \
 	lsof \
 	locate \
-	chkrootkit
+	chkrootkit \
+	openssh-server
 	echo "Finished installs"
 	updatedb
 	echo "Updated database"
@@ -120,7 +120,6 @@ function nopass {
 	echo "Please open Mr. Silva's checklist for instructions"
 
 	#run cracklib
-	libpam-cracklib
 
 	#login.defs
 	echo "Making a backup login.defs file..."
@@ -129,7 +128,7 @@ function nopass {
 	cont
 
 	echo "Copying local login.defs file..."
-	cat ./my_login.defs | tee /etc/login.defs
+	cp ./my_login.defs /etc/login.defs
 
 	# This is expiremental, I do not trust this feature yet.
 	#XXX This will probably screw up comments
@@ -144,7 +143,7 @@ function nopass {
 	cont
 
 	echo "Copying local common-password file..."
-	cat ./my_common-password | tee /etc/pam.d/common-password
+	cp ./my_common-password /etc/pam.d/common-password
 
 	echo 'Password policies configured'
 	# done configuring
@@ -168,7 +167,7 @@ function sshfix {
 	cont
 
 	#permitrootlogin
-	cat ./sshdconfig | tee /etc/ssh/sshd_config
+	cp ./sshdconfig /etc/ssh/sshd_config
 	cont
 
 	#enables/disables ssh
