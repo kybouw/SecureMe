@@ -15,6 +15,7 @@ function main {
 	nopass #sets password policies
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
+	rootkits #configures rootkit tools to run weekly
 #	scruboff #get rid of software
 
 #	end of scripts
@@ -70,7 +71,8 @@ function toolbelt {
 	lsof \
 	locate \
 	chkrootkit \
-	openssh-server
+	openssh-server \
+	rkhunter
 	echo "Finished installs"
 	updatedb
 	echo "Updated database"
@@ -86,8 +88,32 @@ function noport {
 	ufw enable
 	cont
 
-	echo "preventing ddos attacks"
-	sysctl -w net.ipv4.tcp_syncookies=1
+	echo "Hardening IP security..."
+	netsecfilea="$(find /etc/sysctl.d/ -maxdepth 1 -type f -name '*network-security.conf')"
+	netsecfile="${netsecfilea// }"
+	netsecfileb=$netsecfile"~"
+	cp $netsecfile $netsecfileb
+	chmod a-w $netsecfileb
+	cp /etc/sysctl.conf /etc/sysctl.conf~
+	chmod a-w /etc/sysctl.conf~
+	echo "Backups created"
+	if [ -z $netsecfile ] # true if FIND didn't find anything
+	then
+		echo "find could not find the file you were looking for, attempting to use sysctl -w"
+		# reads from ipsec2 line by line using sysctl command to change settings
+		file="./ipsec2.conf"
+		while IFS= read -r line
+		do
+      # display $line or do somthing with $line
+			sysctl -w "$line"
+		done <"$file"
+		sysctl -p
+	else
+		echo "File was found, appending settings to end of file"
+		# if the file exists, we will append our settings from our file
+		cat ./ipsec.conf >> "$netsecfile"
+		service procps start
+	fi
 	cont
 
 	echo "Verify rules..."
@@ -203,12 +229,25 @@ function nomedia {
 	cont
 }
 
+#TODO
+function rootkits {
+	echo "Configuring rootkit finders..."
+	sed "s/RUN_DAILY.*/RUN_DAILY true/g" /etc/chkrootkit.conf
+	sed "s/CRON_DAILY_RUN.*/CRON_DAILY_RUN true/g" /etc/default/rkhunter
+	sed "s/CRON_DB_UPDATE.*/CRON_DB_UPDATE true/g" /etc/default/rkhunter
+	mv /etc/cron.weekly/rkhunter /etc/cron.weekly/rkhunter_update
+	mv /etc/cron.daily/rkhunter /etc/cron.weekly/rkhunter_run
+	mv /etc/cron.daily/chkrootkit /etc/cron.weekly/
+#	chkrootkit
+#	rkhunter
+}
+
 
 #TODO
 function scruboff {
 	echo ''
 	echo 'check for unwanted apps manually'
-	chkrootkit
+#	chkrootkit
 	freshclam
 	clamscan -i -r --remove=yes /
 	service --status-all | less
