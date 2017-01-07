@@ -192,8 +192,8 @@ function sshfix {
 	echo 'Turn off root login settings for ssh'
 	echo 'This must be performed manually'
 	echo "Making a backup config file..."
-	cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
-	chmod a-w /etc/ssh/sshd_config.backup
+	cp /etc/ssh/sshd_config /etc/ssh/sshd_config~
+	chmod a-w /etc/ssh/sshd_config~
 	cont
 
 #TODO make sure that default config doesn't change after installing openssh-server
