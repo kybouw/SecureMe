@@ -40,7 +40,7 @@ function cont {
 #apt update
 function aptf {
 	echo ""
-	echo "Check your sources! Software & Updates\n"
+	echo "Updating the system..."
 
 	#offline solution
 	cp ./mysources.list /etc/apt/sources.list
@@ -48,18 +48,19 @@ function aptf {
 	#online solution
 #	curl https://repogen.simplylinux.ch/txt/trusty/sources_61c3eb1fcff54480d3fafbec45abfe85c2a4b1a8.txt | tee /etc/apt/sources.list
 
-	cont
 	apt-get -y update
 	apt-get -y upgrade
 #	apt-get -y install --reinstall coreutils
 	echo "Finished updating"
+	cont
 }
 
 #install tools to use for misc purposes
 function toolbelt {
 	echo ""
-	echo 'installing utilities...'
+	echo "Installing Utilities..."
 	apt-get -y install \
+	bash \
 	vim \
 	ufw \
 	gufw \
@@ -79,9 +80,7 @@ function toolbelt {
 	cont
 }
 
-
-
-#blocks ports and traffic
+# hardens network security
 function noport {
 	echo ""
 	echo "Enabling Uncomplicated Firewall..."
@@ -89,30 +88,41 @@ function noport {
 	cont
 
 	echo "Hardening IP security..."
-	netsecfilea="$(find /etc/sysctl.d/ -maxdepth 1 -type f -name '*network-security.conf')"
-	netsecfile="${netsecfilea// }"
-	netsecfileb=$netsecfile"~"
-	cp $netsecfile $netsecfileb
-	chmod a-w $netsecfileb
-	cp /etc/sysctl.conf /etc/sysctl.conf~
-	chmod a-w /etc/sysctl.conf~
+
+	netsecfilea="$(find /etc/sysctl.d/ -maxdepth 1 -type f -name '*network-security.conf')" # finds default net-sec config file
+	netsecfile="${netsecfilea// }" # eliminates whitespace from the string (if there is any)
+	netsecfileb=$netsecfile"~" # names the backup file
+
+	cp $netsecfile $netsecfileb # creates a backup of the config file
+	chmod a-w $netsecfileb # makes backup read-only
+
+	cp /etc/sysctl.conf /etc/sysctl.conf~ # backup sysctl config
+	chmod a-w /etc/sysctl.conf~ # read only
+
 	echo "Backups created"
+
+	# 3 cases - found file, no file, multiple files
+	#TODO test the line by line method for all cases
 	if [ -z $netsecfile ] # true if FIND didn't find anything
 	then
 		echo "find could not find the file you were looking for, attempting to use sysctl -w"
 		# reads from ipsec2 line by line using sysctl command to change settings
+
 		file="./ipsec2.conf"
 		while IFS= read -r line
 		do
-      # display $line or do somthing with $line
+			# reads from ipsec2 line by line and uses sysctl command
 			sysctl -w "$line"
 		done <"$file"
 		sysctl -p
+
 	else
 		echo "File was found, appending settings to end of file"
 		# if the file exists, we will append our settings from our file
+
 		cat ./ipsec.conf >> "$netsecfile"
 		service procps start
+
 	fi
 	cont
 
@@ -123,7 +133,7 @@ function noport {
 }
 
 
-#locks root and home
+#locks root user and home directory
 function lockdown {
 	echo ""
 	echo "Locking root user"
@@ -149,23 +159,17 @@ function nopass {
 
 	#login.defs
 	echo "Making a backup login.defs file..."
-	cp /etc/login.defs /etc/login.defs.backup
-	chmod a-w /etc/login.defs.backup
+	cp /etc/login.defs /etc/login.defs~
+	chmod a-w /etc/login.defs~
 	cont
 
 	echo "Copying local login.defs file..."
 	cp ./my_login.defs /etc/login.defs
 
-	# This is expiremental, I do not trust this feature yet.
-	#XXX This will probably screw up comments
-#	sed -i 's/PASS_MIN_DAYS.*/PASS_MIN_DAYS 2/g' /etc/login.defs
-#	sed -i 's/PASS_MAX_DAYS.*/PASS_MAX_DAYS 60/g' /etc/login.defs
-#	sed -i 's/LOGIN_RETRIES.*/LOGIN_RETRIES 3/g' /etc/login.defs
-
 	#common-password
 	echo "Making a backup config file..."
-	cp /etc/pam.d/common-password /etc/pam.d/common-password.backup
-	chmod a-w /etc/pam.d/common-password.backup
+	cp /etc/pam.d/common-password /etc/pam.d/common-password~
+	chmod a-w /etc/pam.d/common-password~
 	cont
 
 	echo "Copying local common-password file..."
@@ -192,6 +196,7 @@ function sshfix {
 	chmod a-w /etc/ssh/sshd_config.backup
 	cont
 
+#TODO make sure that default config doesn't change after installing openssh-server
 	#permitrootlogin
 	cp ./sshdconfig /etc/ssh/sshd_config
 	cont
@@ -207,7 +212,6 @@ function sshfix {
 	cont
 }
 
-#TODO
 #finds and deletes media files
 function nomedia {
 	echo "Deleting media..."
@@ -253,7 +257,7 @@ function scruboff {
 	service --status-all | less
 	sudo dpkg --get --selections | less
 	netstat -tulpn | grep -i LISTEN | less
-	cat /etc/rc.local | less
+	less /etc/rc.local
 	crontab -e | less
 	echo 'Please remove any unwanted apps NOW'
 	read -n1 -r -p "Press space to continue..." key
@@ -268,8 +272,7 @@ function scruboff {
 
 #actually running the script
 unalias -a #Get rid of aliases
-echo "unalias -a" >> ~/.bashrc
-echo "unalias -a" >> /root/.bashrc
+echo "unalias -a" >> /root/.bashrc # gets rid of aliases when root
 if [ "$(id -u)" != "0" ]; then
 	echo "Please run as root"
 	exit
