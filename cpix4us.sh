@@ -45,9 +45,6 @@ function aptf {
 	#offline solution
 	cp ./mysources.list /etc/apt/sources.list
 
-	#online solution
-#	curl https://repogen.simplylinux.ch/txt/trusty/sources_61c3eb1fcff54480d3fafbec45abfe85c2a4b1a8.txt | tee /etc/apt/sources.list
-
 	apt-get -y update
 	apt-get -y upgrade
 #	apt-get -y install --reinstall coreutils
