@@ -57,7 +57,6 @@ function toolbelt {
 	echo ""
 	echo "Installing Utilities..."
 	apt-get -y install \
-	bash \
 	vim \
 	ufw \
 	gufw \
@@ -67,7 +66,6 @@ function toolbelt {
 	nmap \
 	libpam-cracklib \
 	lsof \
-	locate \
 	chkrootkit \
 	openssh-server \
 	rkhunter
