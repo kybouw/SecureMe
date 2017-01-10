@@ -62,7 +62,6 @@ function toolbelt {
 	gufw \
 	firefox \
 	clamav \
-	netstat \
 	nmap \
 	libpam-cracklib \
 	lsof \
