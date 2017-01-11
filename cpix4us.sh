@@ -243,25 +243,11 @@ function rootkits {
 
 #TODO
 function scruboff {
-	echo ''
-	echo 'check for unwanted apps manually'
-#	chkrootkit
+	echo "starting AV..."
 	freshclam
 	clamscan -i -r --remove=yes /
-	service --status-all | less
-	sudo dpkg --get --selections | less
-	netstat -tulpn | grep -i LISTEN | less
-	less /etc/rc.local
-	crontab -e | less
-	echo 'Please remove any unwanted apps NOW'
-	read -n1 -r -p "Press space to continue..." key
-	if [ "$key" = '' ]; then
-		apt-get --purge autoremove
-	else
-		echo 'Exiting script...'
-		exit 1
-	fi
-	echo 'Finished uninstalling'
+	apt-get autoremove
+	cont
 }
 
 #actually running the script
