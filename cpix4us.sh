@@ -16,7 +16,7 @@ function main {
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
 	rootkits #configures rootkit tools to run weekly
-#	scruboff #get rid of software
+	scruboff #get rid of software
 
 #	end of scripts
 
@@ -244,8 +244,8 @@ function rootkits {
 #TODO
 function scruboff {
 	echo "starting AV..."
-	freshclam
-	clamscan -i -r --remove=yes /
+#	freshclam
+#	clamscan -i -r --remove=yes /
 	apt-get autoremove
 	cont
 }
