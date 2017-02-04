@@ -2,7 +2,9 @@ Hello, I welcome all users to try, use, and contribute to this project. It is si
 
 # How to use this tool
 Here is a quick guide for using this script
+
 1. You must have all the files in one folder
 2. You must make the main.sh file executable `$ sudo chmod +x main.sh`
 3. You run the main.sh file like so... `$ sudo ./main.sh`
+
 And that's all there is to it!
