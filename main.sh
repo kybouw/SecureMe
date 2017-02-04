@@ -42,7 +42,12 @@ function aptf {
 	echo "Updating the system..."
 
 	#offline solution
-	cp ./mysources.list /etc/apt/sources.list
+	read -n1 -p "Press 1 if on Ubuntu, 2 if on Debian, AOK to quit" osin
+	if [ "$osin" = "1" ]; then
+		cp ./mysources.list /etc/apt/sources.list
+	elif [ "$osin" = "2" ]; then
+		cp ./mydebsources.list /etc/apt/sources.list
+	fi
 
 	apt-get -y update
 	apt-get -y upgrade

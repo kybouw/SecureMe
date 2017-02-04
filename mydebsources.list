@@ -1,0 +1,27 @@
+#------------------------------------------------------------------------------#
+#                   OFFICIAL DEBIAN REPOS                    
+#------------------------------------------------------------------------------#
+
+###### Debian Main Repos
+deb http://ftp.us.debian.org/debian/ jessie main contrib non-free 
+
+###### Debian Update Repos
+deb http://security.debian.org/ jessie/updates main contrib non-free 
+deb http://ftp.us.debian.org/debian/ jessie-proposed-updates main contrib non-free 
+
+#------------------------------------------------------------------------------#
+#                      UNOFFICIAL  REPOS                       #
+#------------------------------------------------------------------------------#
+
+###### 3rd Party Binary Repos
+
+#### Debian Mozilla team - http://mozilla.debian.net/
+## Run this command: apt-get install pkg-mozilla-archive-keyring
+deb http://mozilla.debian.net/ jessie-backports firefox-release
+
+#### Mozilla Firefox Release - https://mozilla.org
+## Run this command: wget -qO - http://mozilla.debian.net/archive.asc | apt-key add -
+deb http://mozilla.debian.net/ jessie-backports firefox-release
+
+
+
