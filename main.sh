@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo 'Hello, daemons! Welcome to the cpix script!'
+echo 'Hello, user! Welcome to my script.'
 echo 'The script is now running...'
 
 function main {
@@ -21,7 +21,6 @@ function main {
 #	end of scripts
 
 	echo "Script is complete..."
-	echo "Begin fishing for points...\n"
 	cont
 }
 
@@ -62,7 +61,6 @@ function toolbelt {
 	gufw \
 	firefox \
 	clamav \
-	nmap \
 	libpam-cracklib \
 	lsof \
 	chkrootkit \
@@ -244,8 +242,8 @@ function rootkits {
 #TODO
 function scruboff {
 	echo "starting AV..."
-#	freshclam
-#	clamscan -i -r --remove=yes /
+	freshclam
+	clamscan -i -r --remove=yes /
 	apt-get autoremove
 	cont
 }
