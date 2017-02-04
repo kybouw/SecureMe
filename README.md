@@ -1,4 +1,1 @@
-# Hello. My name is Ramona.
-I am a private git server, here to serve my creator.
-
-Everything in this repo is private intellectual property of Kyle Bouwman. _Use of these files without consent is prohibited._ The files contained on this device are not meant to be used in any competition, showcase, or production.
+Hello, I welcome all users to try, use, and contribute to this project. It is simply a tool that helps beef up the security of out-of-the-box Ubuntu distros, as well as clean up the garbage on used ones. Enjoy!
