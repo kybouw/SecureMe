@@ -8,6 +8,7 @@ function main {
 
 #	begin scripts
 
+	verwd #check what the working directory is
 	aptf #apt-get update #
 	toolbelt #install tools #
 	noport #enables ufw
@@ -36,6 +37,12 @@ function cont {
 	fi
 }
 
+#TODO
+function verwd {
+	if [ "$pwd" = "" ]; then
+		cd bin
+	fi
+}
 #apt update
 function aptf {
 	echo ""
@@ -44,7 +51,7 @@ function aptf {
 	#offline solution
 	read -n1 -p "Press 1 if on Ubuntu, 2 if on Debian, AOK to quit" osin
 	if [ "$osin" = "1" ]; then
-		cp ./mysources.list /etc/apt/sources.list
+		cp ../resources/mysources.list /etc/apt/sources.list
 	elif [ "$osin" = "2" ]; then
 		cp ./mydebsources.list /etc/apt/sources.list
 	fi
