@@ -8,6 +8,7 @@ function main {
 
 #	begin scripts
 
+#	verwd #check what the working directory is
 	aptf #apt-get update #
 	toolbelt #install tools #
 	noport #enables ufw
@@ -44,9 +45,9 @@ function aptf {
 	#offline solution
 	read -n1 -p "Press 1 if on Ubuntu, 2 if on Debian, AOK to quit" osin
 	if [ "$osin" = "1" ]; then
-		cp ./mysources.list /etc/apt/sources.list
+		cp ../resources/mysources.list /etc/apt/sources.list
 	elif [ "$osin" = "2" ]; then
-		cp ./mydebsources.list /etc/apt/sources.list
+		cp ../resources/mydebsources.list /etc/apt/sources.list
 	fi
 
 	apt-get -y update
@@ -105,7 +106,7 @@ function noport {
 		echo "find could not find the file you were looking for, attempting to use sysctl -w"
 		# reads from ipsec2 line by line using sysctl command to change settings
 
-		file="./ipsec2.conf"
+		file="../resources/ipsec2.conf"
 		while IFS= read -r line
 		do
 			# reads from ipsec2 line by line and uses sysctl command
@@ -117,7 +118,7 @@ function noport {
 		echo "File was found, appending settings to end of file"
 		# if the file exists, we will append our settings from our file
 
-		cat ./ipsec.conf >> "$netsecfile"
+		cat ../resources/ipsec.conf >> "$netsecfile"
 		service procps start
 
 	fi
@@ -161,7 +162,7 @@ function nopass {
 	cont
 
 	echo "Copying local login.defs file..."
-	cp ./my_login.defs /etc/login.defs
+	cp ../resources/my_login.defs /etc/login.defs
 
 	#common-password
 	echo "Making a backup config file..."
@@ -170,7 +171,7 @@ function nopass {
 	cont
 
 	echo "Copying local common-password file..."
-	cp ./my_common-password /etc/pam.d/common-password
+	cp ../resources/my_common-password /etc/pam.d/common-password
 
 	echo 'Password policies configured'
 	# done configuring
@@ -195,7 +196,7 @@ function sshfix {
 
 #TODO make sure that default config doesn't change after installing openssh-server
 	#permitrootlogin
-	cp ./sshdconfig /etc/ssh/sshd_config
+	cp ../resources/sshdconfig /etc/ssh/sshd_config
 	cont
 
 	#enables/disables ssh
@@ -256,6 +257,7 @@ function scruboff {
 #actually running the script
 unalias -a #Get rid of aliases
 echo "unalias -a" >> /root/.bashrc # gets rid of aliases when root
+cd $(dirname $(readlink -f $0))
 if [ "$(id -u)" != "0" ]; then
 	echo "Please run as root"
 	exit
