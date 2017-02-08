@@ -149,9 +149,6 @@ function lockdown {
 function nopass {
 	echo ""
 	echo "Changing password policies requires manual interaction\n"
-	echo "Please open Mr. Silva's checklist for instructions\n"
-	echo "Changing password policies requires manual interaction"
-	echo "Please open Mr. Silva's checklist for instructions"
 
 	#run cracklib
 
