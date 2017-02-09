@@ -10,4 +10,4 @@ Here is a quick guide for using this script
 
 And that's all there is to it!
 
-*This tool is free as in beer as well as in freedom subject to the GPL 3.0 license. Use responsibly. Not meant for competitions, commercial applications, or public facing equipment. The creator of this program is not responsible for any penalties, losses, or damages caused by the use of this software. Security is not a game, it is the responsibility of the user.*
+*This tool is free and is subject to the GPL 3.0 license. Use responsibly. Not meant for competitions, commercial applications, or public facing equipment, but rather to make your desktop a little more secure. The creator of this program is not responsible for any penalties, losses, or damages caused by the use of this software. Security is the responsibility of the user.*
