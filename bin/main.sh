@@ -181,7 +181,6 @@ function nopass {
 }
 
 
-#easy point here
 function sshfix {
 	echo ''
 	echo 'Turn off root login settings for ssh'
