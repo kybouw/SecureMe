@@ -16,8 +16,8 @@ function main {
 	nopass #sets password policies
 	sshfix #sshconfig #
 	nomedia #gets rid of media files #
-	rootkits #configures rootkit tools to run weekly
-	scruboff #get rid of software
+#	rootkits #configures rootkit tools to run weekly
+#	scruboff #get rid of software
 
 #	end of scripts
 
@@ -174,9 +174,11 @@ function nopass {
 	# done configuring
 
 	# will change pass age for users aready created
-	echo "Applying to all users..."
-	for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
-	echo "Password Policies finished."
+
+	#TODO
+	#echo "Applying to all users..."
+	#for i in $(awk -F':' '/\/home.*sh/ { print $1 }' /etc/passwd); do chage -m 3 -M 60 -W 7 $i; done
+	#echo "Password Policies finished."
 	cont
 }
 
@@ -185,7 +187,7 @@ function nopass {
 function sshfix {
 	echo ''
 	echo 'Turn off root login settings for ssh'
-	echo 'This must be performed manually'
+	#echo 'This must be performed manually'
 	echo "Making a backup config file..."
 	cp /etc/ssh/sshd_config /etc/ssh/sshd_config~
 	chmod a-w /etc/ssh/sshd_config~
