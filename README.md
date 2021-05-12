@@ -1,4 +1,4 @@
-Hello, I welcome all users to try, use, and contribute to this project. It is simply a tool that helps beef up the security of out-of-the-box Ubuntu distros, as well as clean up the garbage on used ones. Enjoy!
+This is an old tool written by myself (IIRC, a lot of it probably gleaned from the internet) when I was just a wee skiddie. I have not used it in a long time, so it might not work. I used it in a competitive setting, so it probably is not useful for production systems. Take a look at the code, and comment out anything that looks risky. It is organized into neat little functions so that you can easily toggle certain blocks of it-- just comment out the function call in `main`.
 
 # How to use this tool
 Here is a quick guide for using this script
@@ -9,5 +9,3 @@ Here is a quick guide for using this script
 4. Follow the pompts along the way, it may take some time.
 
 And that's all there is to it!
-
-*This tool is free and is subject to the GPL 3.0 license. Use responsibly. Not meant for competitions, commercial applications, or public facing equipment, but rather to make your desktop a little more secure. The creator of this program is not responsible for any penalties, losses, or damages caused by the use of this software. Security is the responsibility of the user.*
